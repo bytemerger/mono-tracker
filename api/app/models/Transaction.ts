@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
-import { IAuthors } from './Authors';
+import { IUsers } from './User';
 
 export interface Ipost extends Document {
     title: string;

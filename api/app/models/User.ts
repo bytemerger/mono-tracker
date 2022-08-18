@@ -1,39 +1,29 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-export interface IAuthors extends Document {
-    name: string;
-    bio: string;
+export interface IUsers extends Document {
     email: string;
     password: string;
-    facebookBio?: string;
-    twitterBio?: string;
-    posts: Array<Types.ObjectId | Record<string, unknown>>;
+    accounts: Array<string>;
 }
 
-const Authors = new Schema(
+const Users = new Schema(
     {
-        name: { type: String, required: true },
-        bio: { type: String, required: true },
         email: { type: String, required: true },
         password: { type: String, required: true },
-        facebookBio: String,
-        twitterBio: String,
-        posts: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'post',
-            },
+        accounts: [
+                String,
         ],
     },
     { timestamps: true },
 );
-Authors.methods.toJSON = function () {
+Users.methods.toJSON = function () {
     const obj = this.toObject();
     delete obj.password;
+    delete obj.__v;
     return obj;
 };
-Authors.pre('save', function (next) {
+Users.pre('save', function (next) {
     if (!this.isModified('password')) {
         return next();
     }
@@ -48,5 +38,5 @@ Authors.pre('save', function (next) {
             next(error);
         });
 });
-const model = mongoose.model<IAuthors>('authors', Authors);
+const model = mongoose.model<IUsers>('Users', Users);
 export default model;

@@ -1,7 +1,7 @@
 import Validator from 'validatorjs';
 import { NextFunction, Request, Response } from 'express';
 import createError, { UnknownError } from 'http-errors';
-import * as Auth from '../services/authServices';
+import * as Auth from '../services/authService';
 import createHttpError from 'http-errors';
 
 export async function login(req: Request, res: Response, next: NextFunction) {

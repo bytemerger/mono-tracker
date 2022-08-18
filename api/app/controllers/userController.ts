@@ -1,27 +1,20 @@
-import * as authorService from '../services/authorsServices';
+import * as UserService from '../services/userService';
 import Validator from 'validatorjs';
 import { NextFunction, Request, Response } from 'express';
-import { IAuthors } from '../models/Authors';
+import { IUsers } from '../models/User';
 import mongoose from 'mongoose';
 import createError from 'http-errors';
 
-export async function getAuthorById(req: Request, res: Response) {
+export async function getUserById(req: Request, res: Response) {
     const objectId = new mongoose.Types.ObjectId(req.params.id);
-    const getAuthor = await authorService.getAuthorById(objectId);
-    return res.status(200).json({ data: getAuthor });
+    const getUser = await UserService.getUserById(objectId);
+    return res.status(200).json({ data: getUser });
 }
-export async function getAuthors(req: Request, res: Response) {
-    const getAuthor = await authorService.getAuthors();
-    return res.status(200).json({ data: getAuthor });
-}
-export async function createAuthor(req: Request, res: Response, next: NextFunction) {
+
+export async function createUser(req: Request, res: Response, next: NextFunction) {
     const validator = new Validator(req.body, {
-        name: 'required|string',
-        bio: 'required|string',
         email: 'required|email',
         password: 'required|string',
-        facebookBio: 'string',
-        twitterBio: 'string',
     });
 
     if (validator.fails()) {
@@ -29,14 +22,14 @@ export async function createAuthor(req: Request, res: Response, next: NextFuncti
         return next(error);
     }
     try {
-        const author = await authorService.createNewAuthor(req.body);
-        res.status(200).json({ data: author });
+        const User = await UserService.createNewUser(req.body);
+        res.status(200).json({ data: User });
     } catch (err) {
-        return next(createError(500, { message: err + '... Could not create a new Author' }));
+        return next(createError(500, { message: err + '... Could not create a new User' }));
     }
 }
 
-export async function updateAuthor(req: Request, res: Response, next: NextFunction) {
+export async function updateUser(req: Request, res: Response, next: NextFunction) {
     const id = new mongoose.Types.ObjectId(req.params.id);
     const validator = new Validator(req.body, {
         name: 'alpha_num',
@@ -49,16 +42,16 @@ export async function updateAuthor(req: Request, res: Response, next: NextFuncti
         const error = createError(400, { message: validator.errors.all() });
         return next(error);
     }
-    const author: IAuthors = req.body;
+    const User: IUsers = req.body;
     try {
-        const updatedAuthor = await authorService.updateAuthor(id, req.body);
-        return res.status(200).json({ data: updatedAuthor });
+        const updatedUser = await UserService.updateUser(id, req.body);
+        return res.status(200).json({ data: updatedUser });
     } catch (err) {
-        return next(createError(500, { message: err + '... Could not update Author with id ' + id }));
+        return next(createError(500, { message: err + '... Could not update User with id ' + id }));
     }
 }
-/* export async function deleteAuthor(req: Request, res: Response) {
+/* export async function deleteUser(req: Request, res: Response) {
     const { id } = req.params;
-    const getAuthor = await Authors.findByIdAndDelete(id);
-    return res.status(200).json({ message: 'successfully deleted author with ID ' + id });
+    const getUser = await Users.findByIdAndDelete(id);
+    return res.status(200).json({ message: 'successfully deleted User with ID ' + id });
 } */
