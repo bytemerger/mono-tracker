@@ -5,7 +5,7 @@
   "main": "build/public/index.js",
   "scripts": {
     "start": "ts-node-dev --respawn public/index.ts",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "lint": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

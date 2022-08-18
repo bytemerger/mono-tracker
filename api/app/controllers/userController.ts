@@ -29,6 +29,20 @@ export async function createUser(req: Request, res: Response, next: NextFunction
     }
 }
 
+export async function getUserAccounts(req: Request, res: Response, next: NextFunction) {
+    let id;
+    try {
+        id = new mongoose.Types.ObjectId(req.params.id);
+        const accounts = await UserService.getUserAccounts(id);
+        if (accounts === null) {
+            return next(createError(404, { message: 'User does not exist' }));
+        }
+        return res.status(200).json({ data: accounts });
+    } catch (err) {
+        return next(createError(500, { message: err + '... Could not get User with id ' + id }));
+    }
+}
+
 export async function addUserAccount(req: Request, res: Response, next: NextFunction) {
     const id = new mongoose.Types.ObjectId(req.params.id);
     const validator = new Validator(req.body, {
