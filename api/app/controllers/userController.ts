@@ -29,22 +29,18 @@ export async function createUser(req: Request, res: Response, next: NextFunction
     }
 }
 
-export async function updateUser(req: Request, res: Response, next: NextFunction) {
+export async function addUserAccount(req: Request, res: Response, next: NextFunction) {
     const id = new mongoose.Types.ObjectId(req.params.id);
     const validator = new Validator(req.body, {
-        name: 'alpha_num',
-        bio: 'string',
-        facebookBio: 'string',
-        twitterBio: 'string',
+        accountId: 'required|string',
     });
 
     if (validator.fails()) {
         const error = createError(400, { message: validator.errors.all() });
         return next(error);
     }
-    const User: IUsers = req.body;
     try {
-        const updatedUser = await UserService.updateUser(id, req.body);
+        const updatedUser = await UserService.updateUserAccounts(id, req.body, 'ADD');
         return res.status(200).json({ data: updatedUser });
     } catch (err) {
         return next(createError(500, { message: err + '... Could not update User with id ' + id }));

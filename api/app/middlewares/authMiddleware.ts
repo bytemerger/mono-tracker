@@ -27,7 +27,7 @@ function isUser(req: AuthRequest, res: Response, next: NextFunction) {
     }
     next();
 }
-const isAuthorized = function (req: AuthRequest, res: Response, next: NextFunction) {
+const isAuthenticated = function (req: AuthRequest, res: Response, next: NextFunction) {
     const bearerHeader = req.headers.authorization;
 
     if (typeof bearerHeader !== 'undefined') {
@@ -37,7 +37,7 @@ const isAuthorized = function (req: AuthRequest, res: Response, next: NextFuncti
 
         return verifyToken(req, res, next);
     } else {
-        throw createError(401, { success: false, message: 'Authorization needed' });
+        throw createError(401, { success: false, message: 'Authentication needed' });
     }
 };
-export { isUser, isAuthorized };
+export { isUser, isAuthenticated };

@@ -25,16 +25,17 @@ async function createNewUser(UserInput: DocumentDefinition<IUsers>): Promise<Lea
         throw createError('500', error as UnknownError);
     }
 }
-async function updateUser(
+async function updateUserAccounts(
     id: Types.ObjectId,
-    UserInput: DocumentDefinition<IUsers>,
+    UserInput: { accountId: string},
+    action: 'ADD'|'REMOVE'
 ): Promise<LeanDocument<IUsers> | null> {
     try {
         return (
-            (await Users.findOneAndUpdate({ _id: id }, { ...UserInput }, { new: true }).exec())?.toJSON() || null
+            (await Users.findOneAndUpdate({ _id: id }, { [action === 'ADD' ? '$push' : '$pull']: { accounts : UserInput.accountId } }, { new: true }).exec())?.toJSON() || null
         );
     } catch (error) {
         throw createError('500', error as UnknownError);
     }
 }
-export { getUser, createNewUser, updateUser, getUserById, };
+export { getUser, createNewUser, updateUserAccounts, getUserById, };
