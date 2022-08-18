@@ -13,9 +13,9 @@ export async function Login(
     user: LeanDocument<IUsers>;
     token: string;
 }> {
-    const User = await Users.findOne({ email }).select({ posts: 0, __v: 0, updatedAt: 0 });
+    const User = await Users.findOne({ email }).select({ accounts: 0, __v: 0, updatedAt: 0 });
     if (!User) {
-        throw createError(400, { message: 'user does not exit' });
+        throw createError(400, { message: 'Incorrect Username or password' });
     }
     //check password
     const result = bcrypt.compareSync(password, User?.password ?? '');
@@ -25,19 +25,6 @@ export async function Login(
         });
         return { user: User.toJSON(), token: jwtToken };
     } else {
-        throw createError(401, { message: 'Incorrect Username of password' });
+        throw createError(401, { message: 'Incorrect Username or password' });
     }
-}
-export async function socialLogin(user: any): Promise<Record<string, unknown>> {
-    const User = await Users.findOne({ email: user.email });
-    if (!User) {
-        createNewUser(user as IUsers);
-    }
-    const token = await jwt.sign(user, config.JWT_SECRET || '', {
-        expiresIn: config.TOKEN_VALIDATION_PERIOD,
-    });
-    return {
-        message: `${user.email} successfully logged in.`,
-        token,
-    };
 }
