@@ -47,7 +47,7 @@ async function updateUserAccounts(
             (
                 await Users.findOneAndUpdate(
                     { _id: id },
-                    { [action === 'ADD' ? '$push' : '$pull']: { accounts: UserInput.accountId } },
+                    { [action === 'ADD' ? '$addToSet' : '$pull']: { accounts: UserInput.accountId } },
                     { new: true },
                 ).exec()
             )?.toJSON() || null
