@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-export interface IUsers extends Document {
+export interface IUser extends Document {
     email: string;
     password: string;
     accounts: Array<string>;
@@ -11,7 +11,10 @@ const Users = new Schema(
     {
         email: { type: String, required: true },
         password: { type: String, required: true },
-        accounts: [String],
+        accounts: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Account',
+        }],
     },
     { timestamps: true },
 );
@@ -36,5 +39,5 @@ Users.pre('save', function (next) {
             next(error);
         });
 });
-const model = mongoose.model<IUsers>('Users', Users);
+const model = mongoose.model<IUser>('user', Users);
 export default model;

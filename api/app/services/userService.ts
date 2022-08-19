@@ -1,10 +1,10 @@
 import { DocumentDefinition, FilterQuery, LeanDocument, Types } from 'mongoose';
-import Users, { IUsers } from '../models/User';
+import Users, { IUser } from '../models/Users';
 import createError, { UnknownError } from 'http-errors';
 import * as Mono from './mono';
 import MonoError from './mono/MonoError';
 
-async function getUserById(id: Types.ObjectId): Promise<LeanDocument<IUsers> | null> {
+async function getUserById(id: Types.ObjectId): Promise<LeanDocument<IUser> | null> {
     try {
         return (await Users.findById(id))?.toJSON() ?? null;
     } catch (error) {
@@ -12,7 +12,7 @@ async function getUserById(id: Types.ObjectId): Promise<LeanDocument<IUsers> | n
     }
 }
 
-async function getUser(query: FilterQuery<IUsers>): Promise<LeanDocument<IUsers> | null> {
+async function getUser(query: FilterQuery<IUser>): Promise<LeanDocument<IUser> | null> {
     try {
         return (await Users.findOne({ query }))?.toJSON() ?? null;
     } catch (error) {
@@ -20,7 +20,7 @@ async function getUser(query: FilterQuery<IUsers>): Promise<LeanDocument<IUsers>
     }
 }
 
-async function createNewUser(UserInput: DocumentDefinition<IUsers>): Promise<LeanDocument<IUsers> | false> {
+async function createNewUser(UserInput: DocumentDefinition<IUser>): Promise<LeanDocument<IUser> | false> {
     try {
         const User = (await Users.create(UserInput)).toJSON();
         return User;
@@ -29,7 +29,7 @@ async function createNewUser(UserInput: DocumentDefinition<IUsers>): Promise<Lea
     }
 }
 
-async function getUserAccounts(id: Types.ObjectId): Promise<LeanDocument<Pick<IUsers, 'accounts'>> | null> {
+async function getUserAccounts(id: Types.ObjectId): Promise<LeanDocument<Pick<IUser, 'accounts'>> | null> {
     try {
         const accts = (await Users.findById(id))?.toJSON();
         if (accts?.accounts) return { accounts: accts.accounts };
@@ -43,7 +43,7 @@ async function updateUserAccounts(
     id: Types.ObjectId,
     UserInput: { accountId: string },
     action: 'ADD' | 'REMOVE',
-): Promise<LeanDocument<IUsers> | null> {
+): Promise<LeanDocument<IUser> | null> {
     try {
         return (
             (

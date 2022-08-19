@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import createError from 'http-errors';
 import config from '../../config/secret';
-import Users, { IUsers } from '../models/User';
+import Users, { IUser } from '../models/Users';
 import { createNewUser } from './userService';
 import { LeanDocument } from 'mongoose';
 
@@ -10,7 +10,7 @@ export async function Login(
     email: string,
     password: string,
 ): Promise<{
-    user: LeanDocument<IUsers>;
+    user: LeanDocument<IUser>;
     token: string;
 }> {
     const User = await Users.findOne({ email }).select({ accounts: 0, __v: 0, updatedAt: 0 });

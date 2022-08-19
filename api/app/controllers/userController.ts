@@ -1,7 +1,6 @@
 import * as UserService from '../services/userService';
 import Validator from '../helpers/validator';
 import { NextFunction, Request, Response } from 'express';
-import { IUsers } from '../models/User';
 import mongoose from 'mongoose';
 import createError, { UnknownError } from 'http-errors';
 

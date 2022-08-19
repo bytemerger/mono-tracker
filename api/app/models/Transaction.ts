@@ -1,32 +1,34 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
-import { IUsers } from './User';
+import { IAccount } from './Accounts';
+import { IUser } from './Users';
+export interface ITransaction extends Document {
+    monoId: string;
+    accountId: IAccount['_id'];
+    ownerId: IUser['_id'];
+    type: string;
+    narration: string;
+    amount: string;
+    balance: string;
+    date: string;
+    category: string;
+    currency: string;
+}
 
-export interface Ipost extends Document {
-    title: string;
-    summary: string;
-    tags?: string[];
-    body: string;
-    image?: string;
-    author: Types.ObjectId | Record<string, unknown>;
-}
-export interface IpostDocument extends Ipost {
-    author: IAuthors['_id'];
-}
-const posts = new Schema(
+const transactions = new Schema(
     {
-        title: { type: String, required: true },
-        summary: { type: String, required: true },
-        tags: [
-            {
-                type: String,
-            },
-        ],
-        body: { type: String, required: true },
-        image: String,
-        author: Schema.Types.ObjectId,
+        monoId: { type: String, required: true },
+        accountId: { type: Schema.Types.ObjectId, required: true },
+        ownerId: { type: Schema.Types.ObjectId, required: true },
+        type: String,
+        narration: String,
+        amount: String,
+        balance: String,
+        date: String,
+        category: String,
+        currency: String,
     },
     { timestamps: true },
 );
 
-const model = mongoose.model<IpostDocument>('post', posts);
+const model = mongoose.model<ITransaction>('transaction', transactions);
 export default model;
