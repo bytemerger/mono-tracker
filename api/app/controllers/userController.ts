@@ -3,7 +3,7 @@ import Validator from '../helpers/validator';
 import { NextFunction, Request, Response } from 'express';
 import { IUsers } from '../models/User';
 import mongoose from 'mongoose';
-import createError from 'http-errors';
+import createError, { UnknownError } from 'http-errors';
 
 export async function getUserById(req: Request, res: Response) {
     const objectId = new mongoose.Types.ObjectId(req.params.id);
@@ -60,6 +60,28 @@ export async function addUserAccount(req: Request, res: Response, next: NextFunc
         return next(createError(500, { message: err + '... Could not update User with id ' + id }));
     }
 }
+
+export async function removeUserAccount(req: Request, res: Response, next: NextFunction) {
+    const id = new mongoose.Types.ObjectId(req.params.id);
+    const validator = new Validator(req.body, {
+        accountId: 'required|string',
+    });
+
+    if (validator.fails()) {
+        const error = createError(400, { message: validator.errors.all() });
+        return next(error);
+    }
+    try {
+        const result = await UserService.removeAccount(id, req.body);
+    } catch (error) {
+        if (error instanceof createError) {
+            return next(error);
+        }
+        return next(createError(500, error as UnknownError));
+    }
+    return res.status(200).json({ message: 'successfully deleted User with ID ' + id });
+}
+
 /* export async function deleteUser(req: Request, res: Response) {
     const { id } = req.params;
     const getUser = await Users.findByIdAndDelete(id);
