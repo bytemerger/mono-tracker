@@ -31,7 +31,7 @@ async function createNewUser(UserInput: DocumentDefinition<IUser>): Promise<Lean
 
 async function getUserAccounts(id: Types.ObjectId): Promise<LeanDocument<Pick<IUser, 'accounts'>> | null> {
     try {
-        const accts = (await Users.findById(id))?.toJSON();
+        const accts = (await Users.findById(id)?.populate('account'))?.toJSON();
         if (accts?.accounts) return { accounts: accts.accounts };
         return null;
     } catch (error) {
