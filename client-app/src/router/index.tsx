@@ -3,7 +3,7 @@ import Dashboard from '../pages/dashboard'
 import Login from '../pages/login'
 import Signup from '../pages/signup'
 import LinkPage from '../pages/linkpage'
-// import RequireAuth from './requireAuth'
+import RequireAuth from './requireAuth'
 
 const Router = () => {
   return (
@@ -12,9 +12,16 @@ const Router = () => {
         <Route path='/signup' element={<Signup />} />
         <Route
           path='/dashboard' element={
-            //<RequireAuth>
+            <RequireAuth>
               <Dashboard />
-            //</RequireAuth>
+            </RequireAuth>
+        }
+        />
+        <Route
+          path='/link' element={
+            <RequireAuth>
+              <Dashboard />
+            </RequireAuth>
         }
         />
         <Route path='/login' element={<Login />} />

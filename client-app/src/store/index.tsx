@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { LOCAL_STORAGE_KEY_FOR_TOKEN } from "../libs/Constants";
 import { Store, Action } from "./StoreTypes";
 
@@ -38,10 +38,14 @@ export const AppContext = React.createContext<contextProp>({ state: initialState
 
 export function StoreProvider({ children }: { children: React.ReactNode }){
     const [state, dispatch] = useReducer(reducerFunc, initialState)
-    if ( !state.user.token ){
-        const token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN)
-        dispatch({type: 'setToken', payload: token})
-    }
+    
+    useEffect(()=>{
+        if ( !state.user.token ){
+            const token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN)
+            dispatch({type: 'setToken', payload: token})
+        }
+    }, [])
+    
     const value = {
         state,
         dispatch
