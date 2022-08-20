@@ -3,7 +3,9 @@ import Router from './router'
 
 function App() {
   return (
-    <Router />
+    <div className='font-DuplicateSans'>
+        <Router />
+    </div>
   )
 }
 

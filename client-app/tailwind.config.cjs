@@ -3,7 +3,13 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        DuplicateSans: [
+          'Duplicate Sans', 'sans-serif'
+        ],
+      }
+    },
   },
   plugins: [],
 }
