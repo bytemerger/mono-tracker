@@ -2,31 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 @font-face {
-  font-family: 'Duplicate Sans';
-  src: url('../public/font/DuplicateSans.eot');
-  src: local('Duplicate Sans'), local('DuplicateSans'),
-      url('../public/font/DuplicateSans.eot?#iefix') format('embedded-opentype'),
-      url('../public/font/DuplicateSans.woff2') format('woff2'),
-      url('../public/font/DuplicateSans.woff') format('woff'),
-      url('../public/font/DuplicateSans.ttf') format('truetype');
+  font-family: "Duplicate Sans";
+  src: url("../public/font/DuplicateSans.eot");
+  src: local("Duplicate Sans"), local("DuplicateSans"),
+    url("../public/font/DuplicateSans.eot?#iefix") format("embedded-opentype"),
+    url("../public/font/DuplicateSans.woff2") format("woff2"),
+    url("../public/font/DuplicateSans.woff") format("woff"),
+    url("../public/font/DuplicateSans.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 :root {
   background-color: #101010;
 }
-#customCheck:checked::before{
-  content: '✓';
+#customCheck:checked::before {
+  content: "✓";
   color: black;
   text-align: center;
   border-color: black;
 }
-.cardShadow{
+.cardShadow {
   box-shadow: 0px 4px 4px rgba(50, 50, 71, 0.06);
 }
 .formInput {
   @apply py-4 px-6 rounded-lg border border-[#E4E4E4];
 }
-.formInput-login{
-  @apply py-4 px-6 rounded-lg border border-[#101010] w-full
+.formInput-login {
+  @apply py-4 px-6 rounded-lg border border-[#101010] w-full;
 }

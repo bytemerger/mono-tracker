@@ -1,7 +1,5 @@
-import expenseStat from '../assets/expenseStat.svg'
-function ExpenseStat(){
-    return(
-        <img src={expenseStat} />
-    )
+import expenseStat from "../assets/expenseStat.svg";
+function ExpenseStat() {
+  return <img src={expenseStat} />;
 }
-export default ExpenseStat
+export default ExpenseStat;
