@@ -13,13 +13,16 @@
   font-style: normal;
 }
 :root {
-  background-color: #515151;
+  background-color: #101010;
 }
 #customCheck:checked::before{
   content: '✓';
   color: black;
   text-align: center;
   border-color: black;
+}
+.cardShadow{
+  box-shadow: 0px 4px 4px rgba(50, 50, 71, 0.06);
 }
 .formInput {
   @apply py-4 px-6 rounded-lg border border-[#E4E4E4];
