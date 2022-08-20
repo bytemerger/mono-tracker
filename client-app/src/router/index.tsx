@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Dashboard from '../pages/dashboard'
 import Login from '../pages/login'
 import Signup from '../pages/signup'
+import LinkPage from '../pages/linkpage'
 // import RequireAuth from './requireAuth'
 
 const Router = () => {
@@ -17,6 +18,7 @@ const Router = () => {
         }
         />
         <Route path='/login' element={<Login />} />
+        <Route path='/link' element={<LinkPage />} />
       </Routes>
     </BrowserRouter>
   )
