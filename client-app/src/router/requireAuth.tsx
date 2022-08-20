@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { LOCAL_STORAGE_TOKEN } from '../types/constants'
-import { useAppSelector } from '../types/hook.type'
+import { LOCAL_STORAGE_KEY_FOR_TOKEN } from '../libs/Constants'
+import { AppContext } from '../store'
 
 interface props{
   children: React.ReactNode
 }
 function RequireAuth ({ children }: props) {
-  let token = useAppSelector((state) => state.user.token)
+  const {state, dispatch} = useContext(AppContext)
+  let token = state.user.token
   const [error, setError] = useState<string>()
   const navigate = useNavigate()
 
   if (!token) {
-    if (localStorage.getItem(LOCAL_STORAGE_TOKEN)) {
-      token = localStorage.getItem(LOCAL_STORAGE_TOKEN)!
+    if (localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN)) {
+      token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN)!
     }
   }
   if (!token) {
