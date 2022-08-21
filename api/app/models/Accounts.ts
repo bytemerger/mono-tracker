@@ -12,24 +12,27 @@ export interface IAccount extends Document {
     type: string;
     balance: string;
     currency: string;
+    getTransc: boolean;
     owner: IUser['_id'];
 }
 
 const accounts = new Schema(
     {
+        _id: { type: Schema.Types.ObjectId, required: true },
         institution: {
             name: { type: String },
             bankCode: { type: String },
             type: { type: String },
         },
-        name: { type: String, required: true },
-        accountNumber: { type: String, required: true },
+        name: String,
+        accountNumber: String,
+        getTransc: Boolean,
         type: String,
         balance: String,
         currency: String,
         owner: Schema.Types.ObjectId,
     },
-    { timestamps: true },
+    { timestamps: true, _id: false },
 );
 
 const model = mongoose.model<IAccount>('account', accounts);

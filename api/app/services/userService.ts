@@ -1,5 +1,6 @@
 import { DocumentDefinition, FilterQuery, LeanDocument, Types } from 'mongoose';
 import Users, { IUser } from '../models/Users';
+import Account, { IAccount } from '../models/Accounts';
 import createError, { UnknownError } from 'http-errors';
 import * as Mono from './mono';
 import MonoError from './mono/MonoError';
@@ -46,6 +47,7 @@ async function updateUserAccounts(
 ): Promise<LeanDocument<IUser> | null> {
     try {
         const accId = new Types.ObjectId(accountId);
+        await Account.update({ _id: accId }, { owner: id }, { upsert: true });
         return (
             (
                 await Users.findByIdAndUpdate(

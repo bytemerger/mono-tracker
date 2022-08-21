@@ -26,8 +26,18 @@ export async function authAccount(token: string) {
         },
         throwHttpErrors: false,
     });
-    console.log(result.body);
     if (result.statusCode === 200) return JSON.parse(result.body);
 
     throw new MonoError(result.statusCode, JSON.parse(result.body).message);
+}
+
+export async function getAccount(accId: string) {
+    return await got
+        .get(`${BASEURL}/accounts/${accId}`, {
+            headers: {
+                'mono-sec-key': config.MONO_SEC_KEY,
+            },
+            throwHttpErrors: false,
+        })
+        .json();
 }
