@@ -6,7 +6,6 @@ export interface IUser extends Document {
     password: string;
     firstName: string;
     lastName: string;
-    accounts: Array<string>;
 }
 
 const Users = new Schema(
@@ -15,12 +14,6 @@ const Users = new Schema(
         password: { type: String, required: true },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        accounts: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Account',
-            },
-        ],
     },
     { timestamps: true },
 );

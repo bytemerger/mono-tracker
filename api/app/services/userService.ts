@@ -30,25 +30,28 @@ async function createNewUser(UserInput: DocumentDefinition<IUser>): Promise<Lean
     }
 }
 
-async function getUserAccounts(id: Types.ObjectId): Promise<LeanDocument<Pick<IUser, 'accounts'>> | null> {
+async function getUserAccounts(id: Types.ObjectId): Promise<{ accounts: IAccount[] } | null> {
     try {
-        const accts = (await Users.findById(id)?.populate('account'))?.toJSON();
-        if (accts?.accounts) return { accounts: accts.accounts };
+        const accts = await Account.find({ owner: id });
+        if (accts) return { accounts: accts };
         return null;
     } catch (error) {
         throw createError('500', error as UnknownError);
     }
 }
 
-async function updateUserAccounts(
-    id: Types.ObjectId,
-    accountId: string,
-    action: 'ADD' | 'REMOVE',
-): Promise<LeanDocument<IUser> | null> {
+async function updateUserAccounts(id: Types.ObjectId, accountId: string, action: 'ADD' | 'REMOVE'): Promise<boolean> {
     try {
         const accId = new Types.ObjectId(accountId);
-        await Account.update({ _id: accId }, { owner: id }, { upsert: true });
-        return (
+        if (action === 'ADD') {
+            // will be hydrated by the hook event
+            await Account.update({ _id: accId }, { owner: id }, { upsert: true });
+            return true;
+        }
+        await Account.findByIdAndDelete(accId);
+        return true;
+        // no  need for tracking on user model
+        /* return (
             (
                 await Users.findByIdAndUpdate(
                     id,
@@ -56,7 +59,7 @@ async function updateUserAccounts(
                     { new: true },
                 ).exec()
             )?.toJSON() || null
-        );
+        ); */
     } catch (error) {
         throw createError('500', error as UnknownError);
     }
@@ -64,10 +67,10 @@ async function updateUserAccounts(
 
 async function removeAccount(id: Types.ObjectId, UserInput: { accountId: string }): Promise<boolean> {
     try {
-        const accts = (await Users.findById(id))?.toJSON();
+        const accts = await Account.find({ _id: new Types.ObjectId(UserInput.accountId), owner: id });
 
         //accountId does not exist
-        if (!accts?.accounts.includes(UserInput.accountId)) {
+        if (accts.length < 1) {
             throw createError(404, { message: 'account does not exist' });
         }
 

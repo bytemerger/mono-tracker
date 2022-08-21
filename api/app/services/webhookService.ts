@@ -6,6 +6,10 @@ type Event = 'mono.events.account_updated' | 'mono.events.account_connected';
 
 async function updateAccount(id: string, data: IAccount) {
     const accId = new Types.ObjectId(data['_id']);
+    const check = await Account.find({ accountNumber: data.accountNumber });
+    if (check.length >= 1) {
+        return true;
+    }
     await Account.update({ _id: accId }, { ...data, getTransc: true }, { upsert: true });
 }
 export async function processWebhookData({ event, data }: { event: Event; data: any }) {

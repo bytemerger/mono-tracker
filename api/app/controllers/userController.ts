@@ -59,7 +59,7 @@ export async function addUserAccount(req: Request, res: Response, next: NextFunc
     try {
         const result = await Mono.authAccount(req.body['token']);
         const updatedUser = await UserService.updateUserAccounts(id, result.id, 'ADD');
-        return res.status(200).json({ data: updatedUser });
+        return res.status(200).json({ data: { success: true, message: 'successfully linked' } });
     } catch (err) {
         if (err instanceof MonoError) {
             return next(createError(err.code, { message: err.message + '... mono service' }));
