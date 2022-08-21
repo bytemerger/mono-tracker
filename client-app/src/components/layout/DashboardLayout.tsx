@@ -12,7 +12,7 @@ function DashboardLayout({ children }: props) {
     <div className="flex relative">
       <SideBar menuState={menuOpen} setMenuState={setMenuOpen} />
       <div
-        className={`bg-white mt-2 pt-11 md:px-16 px-4 relative lg:h-[calc(100vh_-_8px)] h-screen w-full`}
+        className={`bg-white mt-2 pt-11 md:px-16 px-4 relative w-full`}
       >
         <div
           className="absolute md:hidden top-12 right-3 cursor-pointer"

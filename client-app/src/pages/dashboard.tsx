@@ -7,7 +7,7 @@ import DashboardLayout from "../components/layout/DashboardLayout";
 export default function dashboard() {
   return (
     <DashboardLayout>
-      <div className="flex flex-col lg:flex-row gap-x-32 gap-y-10">
+      <div className="flex flex-col lg:h-[calc(100vh_-_8px)] lg:flex-row gap-x-32 gap-y-10">
         <div className="">
           <div className="flex justify-between">
             <div className="flex items-center">

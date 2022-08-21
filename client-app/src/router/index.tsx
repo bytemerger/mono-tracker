@@ -22,13 +22,12 @@ const Router = () => {
           path="/link"
           element={
             <RequireAuth>
-              <Dashboard />
+              <LinkPage />
             </RequireAuth>
           }
         />
         <Route path="/login" element={<Login />} />
-        <Route path="/link" element={<LinkPage />} />
-      </Routes>
+]      </Routes>
     </BrowserRouter>
   );
 };
