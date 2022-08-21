@@ -1,5 +1,6 @@
 import express, { ErrorRequestHandler } from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import routes from '../app/routes';
 import dbConnect from '../config';
 import { errorHandler } from '../config/error';
@@ -8,6 +9,7 @@ dbConnect();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors())
 app.use('/api/v1', routes);
 
 app.get('/', (req, res) => {
