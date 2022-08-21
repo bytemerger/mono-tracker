@@ -17,7 +17,7 @@ function NotificationModal() {
       {notification.message && notification.type && (
         <div
           className={`absolute top-3 right-4 rounded-md p-4 text-white/80 text-base ${
-            notification.type === "ERROR" ? "bg-red-200" : "bg-blue-400"
+            notification.type === "ERROR" ? "bg-red-400" : "bg-blue-400"
           }`}
         >
           {notification.message}

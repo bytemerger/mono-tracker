@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useReducer } from "react";
-import { LOCAL_STORAGE_KEY_FOR_TOKEN } from "../libs/Constants";
+import {
+  LOCAL_STORAGE_KEY_FOR_TOKEN,
+  LOCAL_STORAGE_KEY_FOR_USER,
+} from "../libs/Constants";
 import { Store, Action } from "./StoreTypes";
 
 const generateInitalState: () => Store = () => ({
@@ -24,10 +27,7 @@ function reducerFunc(state: typeof initialState, action: Action) {
     case "setToken":
       return {
         ...state,
-        user: {
-          ...state.user,
-          token: payload,
-        },
+        token: payload,
       };
     case "setNotification":
       return {
@@ -37,7 +37,7 @@ function reducerFunc(state: typeof initialState, action: Action) {
     case "setUser":
       return {
         ...state,
-        user: payload,
+        user: { ...payload },
       };
     default:
       throw new Error();
@@ -60,6 +60,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (!state.token) {
       const token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN);
       dispatch({ type: "setToken", payload: token });
+    }
+    if (!state.user._id) {
+      const userString = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_USER);
+      if (userString) {
+        const user = JSON.parse(userString);
+        delete user.createdAt;
+        dispatch({ type: "setUser", payload: user });
+      }
     }
   }, []);
 

@@ -5,7 +5,7 @@ export interface IAccount extends Document {
     institution: {
         name: string;
         bankCode: string;
-        type: string
+        type: string;
     };
     name: string;
     accountNumber: string;
@@ -17,10 +17,10 @@ export interface IAccount extends Document {
 
 const accounts = new Schema(
     {
-        institution: { 
+        institution: {
             name: { type: String },
-            bankCode: { type: String},
-            type : { type: String },
+            bankCode: { type: String },
+            type: { type: String },
         },
         name: { type: String, required: true },
         accountNumber: { type: String, required: true },

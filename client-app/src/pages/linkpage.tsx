@@ -1,6 +1,49 @@
+import Connect from "@mono.co/connect.js";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/layout/DashboardLayout";
+import { MONO_PUBLIC_KEY } from "../libs/Constants";
+import useRequest from "../libs/request";
+import { AppContext } from "../store";
 
 export default function linkpage() {
+  const context = useContext(AppContext);
+  console.log(context.state.user);
+  const navigate = useNavigate();
+  const request = useRequest(context, navigate);
+  const link = () => {
+    const monoInstance = new Connect({
+      key: MONO_PUBLIC_KEY,
+      onSuccess: async (monoData: any) => {
+        const { status, data } = await request(
+          `/users/${context.state.user._id}/accounts`,
+          "PUT",
+          { token: monoData.code }
+        );
+        if (status === 200) {
+          context.dispatch({
+            type: "setNotification",
+            payload: {
+              type: "SUCCESS",
+              message: "Account successfully Linked",
+            },
+          });
+          navigate("/dashboard");
+          return;
+        }
+        context.dispatch({
+          type: "setNotification",
+          payload: {
+            type: "ERROR",
+            message: "An Error Occured Please try again",
+          },
+        });
+      },
+      onClose: () => console.log("widget has been closed"),
+    });
+    monoInstance.setup();
+    monoInstance.open();
+  };
   return (
     <DashboardLayout>
       <div className="lg:h-[calc(100vh_-_8px)] h-screen">
@@ -28,7 +71,10 @@ export default function linkpage() {
                 Link your Bank Account in Seconds
               </div>
             </div>
-            <div className="flex items-center text-[#182CD1] text-lg font-bold bg-white py-1.5 px-4 rounded-md mt-14">
+            <div
+              className="flex items-center text-[#182CD1] text-lg font-bold bg-white py-1.5 px-4 rounded-md mt-14"
+              onClick={link}
+            >
               <span className="mr-1">LINK NOW</span>
               <span>
                 <svg

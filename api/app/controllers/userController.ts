@@ -1,8 +1,10 @@
 import * as UserService from '../services/userService';
+import * as Mono from '../services/mono';
 import Validator from '../helpers/validator';
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import createError, { UnknownError } from 'http-errors';
+import MonoError from '../services/mono/MonoError';
 
 export async function getUserById(req: Request, res: Response) {
     const objectId = new mongoose.Types.ObjectId(req.params.id);
@@ -15,7 +17,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
         email: 'required|email',
         password: 'required|string',
         firstName: 'string',
-        lastName: 'string'
+        lastName: 'string',
     });
 
     if (validator.fails()) {
@@ -47,7 +49,7 @@ export async function getUserAccounts(req: Request, res: Response, next: NextFun
 export async function addUserAccount(req: Request, res: Response, next: NextFunction) {
     const id = new mongoose.Types.ObjectId(req.params.id);
     const validator = new Validator(req.body, {
-        accountId: 'required|string',
+        token: 'required|string',
     });
 
     if (validator.fails()) {
@@ -55,9 +57,13 @@ export async function addUserAccount(req: Request, res: Response, next: NextFunc
         return next(error);
     }
     try {
+        const { id } = await Mono.authAccount(req.body['token']);
         const updatedUser = await UserService.updateUserAccounts(id, req.body, 'ADD');
         return res.status(200).json({ data: updatedUser });
     } catch (err) {
+        if (err instanceof MonoError) {
+            return next(createError(err.code, { message: err.message + '... mono service' }));
+        }
         return next(createError(500, { message: err + '... Could not update User with id ' + id }));
     }
 }
