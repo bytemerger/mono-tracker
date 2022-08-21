@@ -8,7 +8,7 @@ interface props {
 }
 function RequireAuth({ children }: props) {
   const { state, dispatch } = useContext(AppContext);
-  let token = state.user.token;
+  let token = state.token;
   const [error, setError] = useState<string>();
   const navigate = useNavigate();
 

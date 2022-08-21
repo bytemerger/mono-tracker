@@ -1,9 +1,12 @@
 export interface Store {
   user: {
-    token: string | null;
-    name: string;
-    id: string;
+    email: string;
+    _id: string;
+    accounts: [];
+    firstName: string;
+    lastName: string;
   };
+  token: string | null;
   notification: {
     type: null | "ERROR" | "SUCCESS";
     message: string;
@@ -11,6 +14,7 @@ export interface Store {
 }
 export type Action =
   | { type: "setToken"; payload: string | null }
+  | { type: "setUser"; payload: Store["user"] }
   | {
       type: "setNotification";
       payload: { type: Store["notification"]["type"]; message: string };

@@ -4,10 +4,13 @@ import { Store, Action } from "./StoreTypes";
 
 const generateInitalState: () => Store = () => ({
   user: {
-    token: null,
-    name: "",
-    id: "",
+    firstName: "",
+    lastName: "",
+    _id: "",
+    email: "",
+    accounts: [],
   },
+  token: null,
   notification: {
     type: null,
     message: "",
@@ -31,6 +34,11 @@ function reducerFunc(state: typeof initialState, action: Action) {
         ...state,
         notification: payload,
       };
+    case "setUser":
+      return {
+        ...state,
+        user: payload,
+      };
     default:
       throw new Error();
   }
@@ -49,7 +57,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducerFunc, initialState);
 
   useEffect(() => {
-    if (!state.user.token) {
+    if (!state.token) {
       const token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN);
       dispatch({ type: "setToken", payload: token });
     }

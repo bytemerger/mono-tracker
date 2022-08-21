@@ -10,7 +10,7 @@ export default function useRequest(
   { state, dispatch }: contextProp,
   navigator: NavigateFunction
 ) {
-  const token = state.user.token;
+  const token = state.token;
   
   return async (
     url: string,
@@ -31,6 +31,6 @@ export default function useRequest(
       localStorage.clear();
       navigator("/login");
     }
-    return await { status: response.status, data: response.json() };
+    return { status: response.status, data: await response.json() };
   };
 }
