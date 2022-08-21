@@ -1,5 +1,6 @@
 import Logo from "../Logo";
 import closeIcon from "../../assets/closeIcon.svg";
+import { useEffect, useState } from "react";
 
 interface props {
   menuState: boolean;
@@ -7,6 +8,12 @@ interface props {
 }
 
 function SideBar({ menuState, setMenuState }: props) {
+  // active route
+  const [active, setActive] = useState("");
+  useEffect(() => {
+    const route = window.location.pathname.toString().slice(1).split("/")[0];
+    setActive(route);
+  }, [window.location.pathname]);
   return (
     <>
       {menuState && <div className="absolute inset-0 bg-black z-10"></div>}
@@ -26,11 +33,19 @@ function SideBar({ menuState, setMenuState }: props) {
         } transition-all duration-100`}
       >
         <Logo size="" color="light" />
-        <ul className="text-[22px] leading-[35px] mt-12 text-white/50 [&>*]:mt-7">
-          <li className="text-white">Dashboard</li>
-          <li>Transactions</li>
-          <li>Accounts</li>
-          <li>Settings</li>
+        <ul className="text-[22px] leading-[35px] mt-12 text-white/50 [&>*]:mt-7 [&>*]:cursor-pointer">
+          <li className={`${active === "dashboard" && "text-white"}`}>
+            Dashboard
+          </li>
+          <li className={`${active === "transactions" && "text-white"}`}>
+            Transactions
+          </li>
+          <li className={`${active === "accounts" && "text-white"}`}>
+            Accounts
+          </li>
+          <li className={`${active === "settings" && "text-white"}`}>
+            Settings
+          </li>
         </ul>
       </div>
     </>
