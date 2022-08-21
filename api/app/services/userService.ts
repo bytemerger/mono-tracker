@@ -41,15 +41,16 @@ async function getUserAccounts(id: Types.ObjectId): Promise<LeanDocument<Pick<IU
 
 async function updateUserAccounts(
     id: Types.ObjectId,
-    UserInput: { accountId: string },
+    accountId: string,
     action: 'ADD' | 'REMOVE',
 ): Promise<LeanDocument<IUser> | null> {
     try {
+        const accId = new Types.ObjectId(accountId);
         return (
             (
-                await Users.findOneAndUpdate(
-                    { _id: id },
-                    { [action === 'ADD' ? '$addToSet' : '$pull']: { accounts: UserInput.accountId } },
+                await Users.findByIdAndUpdate(
+                    id,
+                    { [action === 'ADD' ? '$addToSet' : '$pull']: { accounts: accId } },
                     { new: true },
                 ).exec()
             )?.toJSON() || null
@@ -72,7 +73,7 @@ async function removeAccount(id: Types.ObjectId, UserInput: { accountId: string 
         const unlink = await Mono.unlinkAccount(UserInput.accountId);
 
         if (unlink) {
-            updateUserAccounts(id, UserInput, 'REMOVE');
+            updateUserAccounts(id, UserInput.accountId, 'REMOVE');
         }
 
         return true;
