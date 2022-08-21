@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { LOCAL_STORAGE_KEY_FOR_TOKEN } from "../libs/Constants";
 import { Store, Action } from "./StoreTypes";
 
@@ -7,6 +7,10 @@ const generateInitalState: () => Store = () => ({
     token: null,
     name: "",
     id: "",
+  },
+  notification: {
+    type: null,
+    message: "",
   },
 });
 const initialState = generateInitalState();
@@ -22,17 +26,23 @@ function reducerFunc(state: typeof initialState, action: Action) {
           token: payload,
         },
       };
+    case "setNotification":
+      return {
+        ...state,
+        notification: payload,
+      };
     default:
       throw new Error();
   }
 }
 
-type contextProp = {
+export type contextProp = {
   state: Store;
-  dispatch?: React.Dispatch<Action>;
+  dispatch: React.Dispatch<Action>;
 };
 export const AppContext = React.createContext<contextProp>({
   state: initialState,
+  dispatch: () => {},
 });
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
@@ -45,9 +55,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const value = {
-    state,
-    dispatch,
-  };
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  const contextValue = useMemo(() => {
+    return { state, dispatch };
+  }, [state, dispatch]);
+  return (
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+  );
 }

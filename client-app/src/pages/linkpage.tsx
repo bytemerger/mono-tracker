@@ -1,8 +1,8 @@
-import DefaultLayout from "../components/layout/DefaultLayout";
+import DashboardLayout from "../components/layout/DashboardLayout";
 
 export default function linkpage() {
   return (
-    <DefaultLayout>
+    <DashboardLayout>
       <div className="flex items-center justify-center h-4/6">
         <div className="md:w-[393px] w-full bg-black rounded-lg flex flex-col items-center text-center py-8">
           <div>
@@ -56,6 +56,6 @@ export default function linkpage() {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </DashboardLayout>
   );
 }

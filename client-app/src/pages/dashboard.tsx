@@ -1,15 +1,12 @@
 import CalendarIcon from "../components/CalendarIcon";
 import ExpenseStat from "../components/ExpenseStat";
-import Logo from "../components/Logo";
 import TransactionGroupItem from "../components/TransactionGroupItem";
 import TransactionElement from "../components/TransactionItem";
-import menuIcon from "../assets/menuIcon.png";
-import SideBar from "../components/layout/SideBar";
-import DefaultLayout from "../components/layout/DefaultLayout";
+import DashboardLayout from "../components/layout/DashboardLayout";
 
 export default function dashboard() {
   return (
-    <DefaultLayout>
+    <DashboardLayout>
       <div className="flex flex-col lg:flex-row gap-x-32 gap-y-10">
         <div className="">
           <div className="flex justify-between">
@@ -176,6 +173,6 @@ export default function dashboard() {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </DashboardLayout>
   );
 }

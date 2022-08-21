@@ -1,11 +1,12 @@
 import "./App.css";
+import DefaultLayout from "./components/layout/DefaultLayout";
 import Router from "./router";
 
 function App() {
   return (
-    <div className="font-DuplicateSans">
-      <Router />
-    </div>
+    <DefaultLayout>
+        <Router />
+    </DefaultLayout>
   );
 }
 
