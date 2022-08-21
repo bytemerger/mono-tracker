@@ -14,6 +14,8 @@ export async function createUser(req: Request, res: Response, next: NextFunction
     const validator = new Validator(req.body, {
         email: 'required|email',
         password: 'required|string',
+        firstName: 'string',
+        lastName: 'string'
     });
 
     if (validator.fails()) {

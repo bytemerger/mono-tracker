@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 export interface IUser extends Document {
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
     accounts: Array<string>;
 }
 
@@ -11,6 +13,8 @@ const Users = new Schema(
     {
         email: { type: String, required: true },
         password: { type: String, required: true },
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
         accounts: [{
             type: Schema.Types.ObjectId,
             ref: 'Account',
