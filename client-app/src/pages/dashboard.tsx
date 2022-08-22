@@ -1,19 +1,63 @@
 import CalendarIcon from "../components/CalendarIcon";
 import ExpenseStat from "../components/ExpenseStat";
-import TransactionGroupItem from "../components/TransactionGroupItem";
+import AccountGroupItem from "../components/AccountGroupItem";
 import TransactionElement from "../components/TransactionItem";
 import DashboardLayout from "../components/layout/DashboardLayout";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../store";
+import useRequest from "../libs/request";
+import { Link, useNavigate } from "react-router-dom";
+import { Transaction } from "../types/TransactionType";
+import { Account } from "../types/AccountType";
 
 export default function dashboard() {
+  const context = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const { state, dispatch } = context;
+  const request = useRequest(context, navigate);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [totalBalance, setTotalBalance] = useState("");
+
+  const getLatestTransaction = async () => {
+    return await request(`/users/u-id/transactions?perPage=15`);
+  };
+  const getAccounts = async () => {
+    return await request(`/users/u-id/accounts`);
+  };
+  useEffect(() => {
+    getAccounts().then((result) => {
+      if (result.status === 200) {
+        if (result.data.data.totalBalance < 1) {
+          dispatch({
+            type: "setNotification",
+            payload: { type: "ERROR", message: "Please Link an account" },
+          });
+          navigate("/link");
+          return;
+        }
+        setAccounts(result.data.data.accounts);
+        setTotalBalance(result.data.data.totalBalance);
+      }
+    });
+    getLatestTransaction().then((result) => {
+      if (result.status === 200) {
+        setTransactions(result.data.data);
+      }
+    });
+  }, []);
   return (
     <DashboardLayout>
-      <div className="flex flex-col lg:h-[calc(100vh_-_8px)] lg:flex-row gap-x-32 gap-y-10">
+      <div className="flex flex-col lg:h-[calc(100vh_-_40px)] lg:flex-row gap-x-32 gap-y-10">
         <div className="">
           <div className="flex justify-between">
             <div className="flex items-center">
-              <div className="w-9 h-9 rounded-full bg-gray-400 mr-1"></div>
+              <div className="w-9 h-9 rounded-full bg-gray-400 mr-1 flex justify-center items-center">
+                {state.user.firstName[0] + state.user.lastName[0]}
+              </div>
               <div className="text-base tracking-[0.3px] text-[#262A41]">
-                Good morning, Ola
+                Good morning, {state.user.firstName}
               </div>
             </div>
             <div className="rounded-md md:flex gap-2 items-center px-2 py-1 border border-[#D1D6DE] hidden">
@@ -70,15 +114,15 @@ export default function dashboard() {
                 </svg>
               </div>
             </div>
-            <div className="mt-8 [&>*]:mt-6">
-              <TransactionElement />
-              <TransactionElement />
-              <TransactionElement />
-              <TransactionElement />
-              <TransactionElement />
+            <div className="mt-8 [&>*]:mt-6 overflow-y-scroll h-[300px]">
+              {transactions.map((acc) => (
+                <TransactionElement {...acc} />
+              ))}
             </div>
           </div>
-          <div className="mt-7 opacity-50 text-center">VIEW ALL {">"}</div>
+          <Link to="/transactions">
+            <div className="mt-7 opacity-50 text-center">VIEW ALL {">"}</div>
+          </Link>
         </div>
         <div>
           {/* balance card */}
@@ -87,7 +131,7 @@ export default function dashboard() {
               TOTAL BALANCE
             </div>
             <div className="text-5xl font-bold tracking-[.496px]">
-              30,000,000
+              ₦{parseInt(totalBalance) / 100}
             </div>
             <div className="text-[17px] text-[#404852] tracking-[0.64px]">
               Your balance across all Banks
@@ -98,39 +142,43 @@ export default function dashboard() {
                 <div className="w-9 h-9 rounded-full bg-blue-400"></div>
                 <div className="w-9 h-9 rounded-full bg-green-400"></div>
               </div>
-              <div className="w-9 h-9 rounded-full border border-black/20 flex justify-center items-center">
-                <svg
-                  width="16"
-                  height="15"
-                  viewBox="0 0 16 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8.16193 0.935425V14.1563"
-                    stroke="#D2DCE8"
-                    stroke-width="1.19355"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M1.53931 7.5459L14.7844 7.5459"
-                    stroke="#D2DCE8"
-                    stroke-width="1.19355"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+              <Link to="/link">
+                <div className="w-9 h-9 rounded-full border border-black/20 flex justify-center items-center">
+                  <svg
+                    width="16"
+                    height="15"
+                    viewBox="0 0 16 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.16193 0.935425V14.1563"
+                      stroke="#D2DCE8"
+                      stroke-width="1.19355"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M1.53931 7.5459L14.7844 7.5459"
+                      stroke="#D2DCE8"
+                      stroke-width="1.19355"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </Link>
+            </div>
+            <Link to="/accounts">
+              <div className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl">
+                UNLINK BANK ACCOUNT
               </div>
-            </div>
-            <div className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl">
-              UNLINK BANK ACCOUNT
-            </div>
+            </Link>
           </div>
           <div className="mt-14">
             <div className="flex justify-between pb-[14px] border-b-[0.54px] border-[#DEDEDE]">
               <div className="text-[19px] font-bold text-[#262A41] leading-[20px]">
-                Where your money go?
+                Where your money is?
               </div>
               <div>
                 <svg
@@ -165,10 +213,16 @@ export default function dashboard() {
               </div>
             </div>
             <div className="mt-5 [&>*]:mt-5">
-              <TransactionGroupItem />
-              <TransactionGroupItem />
-              <TransactionGroupItem />
-              <TransactionGroupItem />
+              {accounts.map((acc) => {
+                return (
+                  <AccountGroupItem
+                    {...acc}
+                    percentage={
+                      parseInt(totalBalance) / (parseInt(acc.balance) / 100)
+                    }
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
