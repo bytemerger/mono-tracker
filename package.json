@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build-server": "cd api && npm run build",
+    "start-server": "npm run build-server && concurrently --kill-others \"node api/build/public/index.js\" \"node api/build/cron/getTransactions.js\"",
+    "build-cleint": "cd client-app && npm run build",
+    "start-client": "npm run build-client && cd client-app && npm run preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "concurrently": "^7.3.0"
+  }
+}

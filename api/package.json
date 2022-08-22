@@ -7,6 +7,7 @@
     "start": "ts-node-dev --respawn public/index.ts",
     "lint": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
     "build": "tsc",
+    "start:prod": "npm run build && node ./build/public/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,6 +20,7 @@
     "@types/http-errors": "^1.8.1",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "^14.14.14",
+    "@types/node-cron": "^3.0.2",
     "@types/validatorjs": "^3.15.0",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",
@@ -53,6 +55,7 @@
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.8",
+    "node-cron": "^3.0.2",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
     "validatorjs": "^3.22.1"

@@ -108,4 +108,36 @@ async function deleteUser(id: string): Promise<boolean> {
 
     return true;
 }
-export { getUser, createNewUser, updateUserAccounts, getUserById, getUserAccounts, removeAccount, deleteUser };
+
+async function requireReAuth(id: string) {
+    await Account.update({ _id: Types.ObjectId(id) }, { reAuth: true });
+}
+async function refreshTransactions() {
+    const accounts = await Account.find();
+
+    for (let i = 0; i < accounts.length; i++) {
+        const accountId = accounts[i]._id.toString();
+
+        // use proper logger
+        console.log(`refreshing account: ${accountId}`);
+
+        const res = (await Mono.refreshTrans(accountId)) as any;
+        if (res.hasNewData) {
+            await Account.update({ _id: Types.ObjectId(accountId) }, { getTransc: true });
+        }
+        if (res.code === 'REAUTHORISATION_REQUIRED') {
+            await requireReAuth(accountId);
+        }
+    }
+}
+
+export {
+    getUser,
+    createNewUser,
+    updateUserAccounts,
+    getUserById,
+    getUserAccounts,
+    removeAccount,
+    deleteUser,
+    refreshTransactions,
+};
