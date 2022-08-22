@@ -15,6 +15,7 @@ export interface Store {
 export type Action =
   | { type: "setToken"; payload: string | null }
   | { type: "setUser"; payload: Store["user"] }
+  | { type: "resetState"; payload: null }
   | {
       type: "setNotification";
       payload: { type: Store["notification"]["type"]; message: string };

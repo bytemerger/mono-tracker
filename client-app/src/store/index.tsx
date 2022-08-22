@@ -39,6 +39,10 @@ function reducerFunc(state: typeof initialState, action: Action) {
         ...state,
         user: { ...payload },
       };
+    case "resetState":
+      return {
+        ...generateInitalState(),
+      };
     default:
       throw new Error();
   }
