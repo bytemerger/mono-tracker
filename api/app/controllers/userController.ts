@@ -40,9 +40,13 @@ export async function getUserAccounts(req: Request, res: Response, next: NextFun
         const id = new mongoose.Types.ObjectId(req.params.id);
         const accounts = await UserService.getUserAccounts(id);
         if (accounts === null) {
-            return next(createError(404, { message: 'User does not exist' }));
+            return next(createError(404, { message: 'User account does not exist' }));
         }
-        return res.status(200).json({ data: accounts });
+        // get user total balance
+        const totalBalance = accounts.accounts.reduce((total, acc) => {
+            return total + parseInt(acc.balance);
+        }, 0);
+        return res.status(200).json({ data: { ...accounts, totalBalance } });
     } catch (err) {
         console.log(err);
         return next(createError(500, { message: err + '... Could not get User with id ' }));
@@ -105,8 +109,8 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
 // no need for a transaction service
 export async function getUserTransactions(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    if (!id){
-        return res.status(400).json({ message: 'Bad Request -invalid ID'})
+    if (!id) {
+        return res.status(400).json({ message: 'Bad Request -invalid ID' });
     }
     const page = parseInt(req.query.page as string) || 1;
     const perPage = parseInt(req.query.perPage as string) || 1000;
@@ -116,7 +120,7 @@ export async function getUserTransactions(req: Request, res: Response, next: Nex
 
         const transactionModel = Transaction.find({ ownerId: id });
         const transactionCollections = await paginate<ITransaction>(transactionModel, totalDocuments, page, perPage);
-        return res.status(200).json({ transactionCollections });
+        return res.status(200).json({ ...transactionCollections });
     } catch (error) {
         return res.sendStatus(500);
     }
