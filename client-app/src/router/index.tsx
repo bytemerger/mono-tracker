@@ -54,6 +54,7 @@ const Router = () => {
           }
         />
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
