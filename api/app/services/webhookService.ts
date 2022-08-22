@@ -3,7 +3,11 @@ import * as Mono from '../services/mono';
 import Account, { IAccount } from '../models/Accounts';
 import Transaction, { ITransaction } from '../models/Transaction';
 
-type Event = 'mono.events.account_updated' | 'mono.events.account_connected';
+type Event =
+    | 'mono.events.account_updated'
+    | 'mono.events.account_connected'
+    | 'mono.events.reauthorisation_required'
+    | 'mono.events.account_reauthorized';
 
 async function updateAccount(id: string, data: IAccount) {
     const accId = new Types.ObjectId(data['_id']);
@@ -43,5 +47,14 @@ export async function processWebhookData({ event, data }: { event: Event; data: 
             await updateAccount(accountInfo.account['_id'], accountInfo.account);
             return true;
         }
+    }
+
+    if (event === 'mono.events.reauthorisation_required') {
+        await Account.update({ _id: new Types.ObjectId(data.account['_id']) }, { reAuth: true });
+        return true;
+    }
+    if (event === 'mono.events.account_reauthorized') {
+        await Account.update({ _id: new Types.ObjectId(data.account['_id']) }, { reAuth: false });
+        return true;
     }
 }

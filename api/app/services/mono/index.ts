@@ -32,6 +32,18 @@ export async function authAccount(token: string) {
     throw new MonoError(result.statusCode, JSON.parse(result.body).message);
 }
 
+export async function reAuthAccount(id: string) {
+    const result = await got.post(`${BASEURL}/accounts/${id}/reauthorise`, {
+        headers: {
+            'mono-sec-key': config.MONO_SEC_KEY,
+        },
+        throwHttpErrors: false,
+    });
+    if (result.statusCode === 200) return JSON.parse(result.body);
+
+    throw new MonoError(result.statusCode, JSON.parse(result.body).message);
+}
+
 export async function getAccount(accId: string) {
     return await got
         .get(`${BASEURL}/accounts/${accId}`, {

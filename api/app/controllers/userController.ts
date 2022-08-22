@@ -106,6 +106,28 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
     }
 }
 
+export async function reAuth(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    const validator = new Validator(req.body, {
+        accountId: 'required|string',
+    });
+
+    if (validator.fails()) {
+        const error = createError(400, { message: validator.errors.all() });
+        return next(error);
+    }
+    try {
+        const result = await Mono.reAuthAccount(req.body.accountId);
+        return res.status(200).json({ token: result.token });
+    } catch (err) {
+        if (err instanceof MonoError) {
+            return next(createError(err.code, { message: err.message + '... mono service' }));
+        }
+        return next(createError(500, { message: err + '... Could not update User with id ' + id }));
+    }
+}
+
 // no need for a transaction service
 export async function getUserTransactions(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;

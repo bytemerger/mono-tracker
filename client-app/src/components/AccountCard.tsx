@@ -31,7 +31,7 @@ function AccountCard({ account, unlink, reAuth }: props) {
                   </svg>
                 </div>
               ) : (
-                <div>
+                <div onClick={()=> reAuth(account._id)}>
                   <img src={refresh} />
                   <span className="text-xs">Re-auth</span>
                 </div>
