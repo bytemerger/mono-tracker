@@ -1,6 +1,7 @@
 import Logo from "../Logo";
 import closeIcon from "../../assets/closeIcon.svg";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface props {
   menuState: boolean;
@@ -35,13 +36,17 @@ function SideBar({ menuState, setMenuState }: props) {
         <Logo size="" color="light" />
         <ul className="text-[22px] leading-[35px] mt-12 text-white/50 [&>*]:mt-7 [&>*]:cursor-pointer">
           <li className={`${active === "dashboard" && "text-white"}`}>
-            Dashboard
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
           </li>
           <li className={`${active === "transactions" && "text-white"}`}>
             Transactions
           </li>
           <li className={`${active === "accounts" && "text-white"}`}>
-            Accounts
+            <Link to="/accounts">
+              Accounts
+            </Link>
           </li>
           <li className={`${active === "settings" && "text-white"}`}>
             Settings

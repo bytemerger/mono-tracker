@@ -1,5 +1,6 @@
 import { NavigateFunction } from "react-router-dom";
 import { contextProp } from "../store";
+import { LOCAL_STORAGE_KEY_FOR_TOKEN, LOCAL_STORAGE_KEY_FOR_USER } from "./Constants";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -10,13 +11,27 @@ export default function useRequest(
   { state, dispatch }: contextProp,
   navigator: NavigateFunction
 ) {
-  const token = state.token;
-  
+  let token = state.token;
+  if (!state.token) {
+    token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN);
+    //dispatch({ type: "setToken", payload: token });
+  }
+  let userId = state.user._id
+  if (!userId) {
+    const userString = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_USER);
+    if (userString) {
+      userId = JSON.parse(userString)['_id'];
+    }
+  }
   return async (
     url: string,
     method: Method = "GET",
     body?: Record<string, unknown>
   ) => {
+    // At refresh there is no userID
+    if (url.match('u-id')){
+      url = url.replace('u-id', userId)
+    }
     const response = await fetch(`${BASE_URL}${url}`, {
       method,
       headers: {

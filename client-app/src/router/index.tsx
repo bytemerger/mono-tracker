@@ -3,6 +3,7 @@ import Dashboard from "../pages/dashboard";
 import Login from "../pages/login";
 import Signup from "../pages/signup";
 import LinkPage from "../pages/linkpage";
+import Accounts from "../pages/account";
 import RequireAuth from "./requireAuth";
 
 const Router = () => {
@@ -26,8 +27,16 @@ const Router = () => {
             </RequireAuth>
           }
         />
+        <Route
+          path="/accounts"
+          element={
+            <RequireAuth>
+              <Accounts />
+            </RequireAuth>
+          }
+        />
         <Route path="/login" element={<Login />} />
-]      </Routes>
+      </Routes>
     </BrowserRouter>
   );
 };

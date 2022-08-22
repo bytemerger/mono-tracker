@@ -13,6 +13,7 @@ export interface IAccount extends Document {
     balance: string;
     currency: string;
     getTransc: boolean;
+    reAuth: boolean;
     owner: IUser['_id'];
 }
 
@@ -27,6 +28,7 @@ const accounts = new Schema(
         name: String,
         accountNumber: String,
         getTransc: Boolean,
+        reAuth: Boolean,
         type: String,
         balance: String,
         currency: String,
