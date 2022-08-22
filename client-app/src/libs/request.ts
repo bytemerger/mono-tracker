@@ -46,6 +46,10 @@ export default function useRequest(
     });
     if (response.status.toString().startsWith("401")) {
       dispatch({ type: "setToken", payload: null });
+      dispatch({
+        type: "setNotification",
+        payload: { type: "ERROR", message: "Unauthorised Please Login" },
+      });
       localStorage.clear();
       navigator("/login");
     }
