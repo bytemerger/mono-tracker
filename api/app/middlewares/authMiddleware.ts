@@ -26,8 +26,14 @@ async function isUser(req: AuthRequest, res: Response, next: NextFunction) {
     const { id } = req.params;
 
     // check if user still exist if token is still active deleted accounts can make request
-    const result = await getUserById(Types.ObjectId(id));
+    let ObjecId;
+    try {
+        ObjecId = new Types.ObjectId(id);
+    } catch (error) {
+        return res.status(400).json({ success: false, message: 'User Id does not exist' });
+    }
 
+    const result = await getUserById(ObjecId);
     if (!result || id !== req.user?._id) {
         return res.status(401).json({ success: false, message: 'Error user access' });
     }
