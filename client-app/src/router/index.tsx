@@ -5,6 +5,7 @@ import Signup from "../pages/signup";
 import LinkPage from "../pages/linkpage";
 import Accounts from "../pages/account";
 import Settings from "../pages/settings";
+import Transactions from "../pages/transactions";
 import RequireAuth from "./requireAuth";
 
 const Router = () => {
@@ -41,6 +42,14 @@ const Router = () => {
           element={
             <RequireAuth>
               <Settings />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/transactions"
+          element={
+            <RequireAuth>
+              <Transactions />
             </RequireAuth>
           }
         />

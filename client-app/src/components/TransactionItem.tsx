@@ -3,8 +3,9 @@ interface props {
   date: string;
   type: "debit" | "credit";
   amount: string;
+  detailed?: boolean
 }
-function TransactionElement({ narration, date, type, amount }: props) {
+function TransactionElement({ narration, date, type, amount, detailed = false }: props) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-4">
@@ -31,7 +32,7 @@ function TransactionElement({ narration, date, type, amount }: props) {
         )}
         <div className="flex flex-col gap-3">
           <div className="font-bold text-[17px] leading-4 tracking-[0.37px] text-[#273240]">
-            {narration.substring(0, 20) + "...."}
+            {detailed ? narration.substring(0,50) : narration.substring(0, 20) + "...."}
           </div>
           <div className="text-base leading-4 tracking-[.57px] text-[#404852] opacity-50">
             {date}• {type}

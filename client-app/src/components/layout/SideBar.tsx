@@ -54,7 +54,7 @@ function SideBar({ menuState, setMenuState }: props) {
             <Link to="/dashboard">Dashboard</Link>
           </li>
           <li className={`${active === "transactions" && "text-white"}`}>
-            Transactions
+            <Link to="/transactions">Transactions</Link>
           </li>
           <li className={`${active === "accounts" && "text-white"}`}>
             <Link to="/accounts">Accounts</Link>
