@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import createError from 'http-errors';
 import jwt from 'jsonwebtoken';
+import { Types } from 'mongoose';
 import config from '../../config/secret';
+import { getUserById } from '../services/userService';
 
 interface AuthRequest extends Request {
     user?: jwt.JwtPayload;
@@ -20,9 +22,13 @@ const verifyToken = function (req: AuthRequest, res: Response, next: NextFunctio
         }
     });
 };
-function isUser(req: AuthRequest, res: Response, next: NextFunction) {
+async function isUser(req: AuthRequest, res: Response, next: NextFunction) {
     const { id } = req.params;
-    if (id !== req.user?._id) {
+
+    // check if user still exist if token is still active deleted accounts can make request
+    const result = await getUserById(Types.ObjectId(id));
+
+    if (!result || id !== req.user?._id) {
         return res.status(401).json({ success: false, message: 'Error user access' });
     }
     next();

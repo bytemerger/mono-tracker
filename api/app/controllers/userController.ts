@@ -42,8 +42,8 @@ export async function getUserAccounts(req: Request, res: Response, next: NextFun
         }
         return res.status(200).json({ data: accounts });
     } catch (err) {
-        console.log(err)
-        return next(createError(500, { message: err + '... Could not get User with id '}));
+        console.log(err);
+        return next(createError(500, { message: err + '... Could not get User with id ' }));
     }
 }
 
@@ -90,8 +90,12 @@ export async function removeUserAccount(req: Request, res: Response, next: NextF
     return res.status(200).json({ message: 'successfully deleted User with ID ' + id });
 }
 
-/* export async function deleteUser(req: Request, res: Response) {
+export async function deleteUser(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const getUser = await Users.findByIdAndDelete(id);
-    return res.status(200).json({ message: 'successfully deleted User with ID ' + id });
-} */
+    try {
+        const del = await UserService.deleteUser(id);
+        return res.status(200).json({ message: 'successfully deleted User with ID ' + id });
+    } catch (error) {
+        return next(createError(500, { message: error }));
+    }
+}

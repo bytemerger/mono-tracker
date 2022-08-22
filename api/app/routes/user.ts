@@ -5,11 +5,13 @@ import {
     addUserAccount,
     getUserAccounts,
     removeUserAccount,
+    deleteUser,
 } from '../controllers/userController';
 import { isAuthenticated, isUser } from '../middlewares/authMiddleware';
 const router = express.Router();
 
 router.get('/:id', getUserById);
+router.delete('/:id', [isAuthenticated, isUser], deleteUser);
 router.post('/', createUser);
 router.get('/:id/accounts', [isAuthenticated, isUser], getUserAccounts);
 router.put('/:id/accounts', [isAuthenticated, isUser], addUserAccount);

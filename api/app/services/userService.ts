@@ -65,6 +65,15 @@ async function updateUserAccounts(id: Types.ObjectId, accountId: string, action:
     }
 }
 
+async function unlinkMonoAcc(userId: Types.ObjectId, accId: string) {
+    // unlink from mono
+    const unlink = await Mono.unlinkAccount(accId);
+
+    if (unlink) {
+        updateUserAccounts(userId, accId, 'REMOVE');
+    }
+}
+
 async function removeAccount(id: Types.ObjectId, UserInput: { accountId: string }): Promise<boolean> {
     try {
         const accts = await Account.find({ _id: new Types.ObjectId(UserInput.accountId), owner: id });
@@ -74,12 +83,7 @@ async function removeAccount(id: Types.ObjectId, UserInput: { accountId: string 
             throw createError(404, { message: 'account does not exist' });
         }
 
-        // unlink from mono
-        const unlink = await Mono.unlinkAccount(UserInput.accountId);
-
-        if (unlink) {
-            updateUserAccounts(id, UserInput.accountId, 'REMOVE');
-        }
+        await unlinkMonoAcc(id, UserInput.accountId);
 
         return true;
     } catch (error) {
@@ -89,4 +93,19 @@ async function removeAccount(id: Types.ObjectId, UserInput: { accountId: string 
         throw createError('500', error as UnknownError);
     }
 }
-export { getUser, createNewUser, updateUserAccounts, getUserById, getUserAccounts, removeAccount };
+async function deleteUser(id: string): Promise<boolean> {
+    const ID = new Types.ObjectId(id);
+    // delete all the accounts linked to the user
+    const userMonoAccounts = await Account.find({ owner: id });
+
+    if (Array.isArray(userMonoAccounts) && userMonoAccounts.length > 0) {
+        for (const acc of userMonoAccounts) {
+            await unlinkMonoAcc(ID, acc._id);
+        }
+    }
+
+    await Users.findByIdAndDelete(ID);
+
+    return true;
+}
+export { getUser, createNewUser, updateUserAccounts, getUserById, getUserAccounts, removeAccount, deleteUser };

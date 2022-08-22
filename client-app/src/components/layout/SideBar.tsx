@@ -49,7 +49,9 @@ function SideBar({ menuState, setMenuState }: props) {
             </Link>
           </li>
           <li className={`${active === "settings" && "text-white"}`}>
-            Settings
+            <Link to="/settings">
+              Settings
+            </Link>
           </li>
         </ul>
       </div>

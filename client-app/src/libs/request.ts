@@ -1,6 +1,9 @@
 import { NavigateFunction } from "react-router-dom";
 import { contextProp } from "../store";
-import { LOCAL_STORAGE_KEY_FOR_TOKEN, LOCAL_STORAGE_KEY_FOR_USER } from "./Constants";
+import {
+  LOCAL_STORAGE_KEY_FOR_TOKEN,
+  LOCAL_STORAGE_KEY_FOR_USER,
+} from "./Constants";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -16,11 +19,11 @@ export default function useRequest(
     token = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_TOKEN);
     //dispatch({ type: "setToken", payload: token });
   }
-  let userId = state.user._id
+  let userId = state.user._id;
   if (!userId) {
     const userString = localStorage.getItem(LOCAL_STORAGE_KEY_FOR_USER);
     if (userString) {
-      userId = JSON.parse(userString)['_id'];
+      userId = JSON.parse(userString)["_id"];
     }
   }
   return async (
@@ -29,14 +32,14 @@ export default function useRequest(
     body?: Record<string, unknown>
   ) => {
     // At refresh there is no userID
-    if (url.match('u-id')){
-      url = url.replace('u-id', userId)
+    if (url.match("u-id")) {
+      url = url.replace("u-id", userId);
     }
     const response = await fetch(`${BASE_URL}${url}`, {
       method,
       headers: {
         "Content-Type": "application/json",
-        mode: 'no-cors',
+        mode: "no-cors",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),

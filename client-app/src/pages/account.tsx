@@ -19,22 +19,30 @@ export default function accounts() {
 
   const unlink = async (id: string) => {
     const body = {
-        accountId: id
-    }
-    const res = await request(`/users/u-id/accounts`,'DELETE', body)
-    if (res.status === 200){
-        context.dispatch({type:'setNotification', payload: { type: 'SUCCESS', message:'Successfully unlinked account'}})
-        setAccs(accs!.filter((account)=> {
-            return account._id !== id
-        }))
-        return
+      accountId: id,
+    };
+    const res = await request(`/users/u-id/accounts`, "DELETE", body);
+    if (res.status === 200) {
+      context.dispatch({
+        type: "setNotification",
+        payload: { type: "SUCCESS", message: "Successfully unlinked account" },
+      });
+      setAccs(
+        accs!.filter((account) => {
+          return account._id !== id;
+        })
+      );
+      return;
     }
     // Error
-    context.dispatch({type:'setNotification', payload: { type: 'ERROR', message:res.data.message}})
-  }
+    context.dispatch({
+      type: "setNotification",
+      payload: { type: "ERROR", message: res.data.message },
+    });
+  };
   useEffect(() => {
-    getAccounts().then((result)=>{
-        setAccs(result.data.data.accounts)
+    getAccounts().then((result) => {
+      setAccs(result.data.data.accounts);
     });
   }, []);
   return (
@@ -55,11 +63,11 @@ export default function accounts() {
           })}
         </div>
         <div className="mx-auto w-64">
-            <Link to="/link">
-                <div className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl">
-                LINK BANK ACCOUNT
-                </div>
-            </Link>
+          <Link to="/link">
+            <div className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl">
+              LINK BANK ACCOUNT
+            </div>
+          </Link>
         </div>
       </div>
     </DashboardLayout>
