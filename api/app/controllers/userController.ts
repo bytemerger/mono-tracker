@@ -2,9 +2,11 @@ import * as UserService from '../services/userService';
 import * as Mono from '../services/mono';
 import Validator from '../helpers/validator';
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import createError, { UnknownError } from 'http-errors';
 import MonoError from '../services/mono/MonoError';
+import Transaction, { ITransaction } from '../models/Transaction';
+import paginate from '../helpers/paginate';
 
 export async function getUserById(req: Request, res: Response) {
     const objectId = new mongoose.Types.ObjectId(req.params.id);
@@ -97,5 +99,25 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
         return res.status(200).json({ message: 'successfully deleted User with ID ' + id });
     } catch (error) {
         return next(createError(500, { message: error }));
+    }
+}
+
+// no need for a transaction service
+export async function getUserTransactions(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    if (!id){
+        return res.status(400).json({ message: 'Bad Request -invalid ID'})
+    }
+    const page = parseInt(req.query.page as string) || 1;
+    const perPage = parseInt(req.query.perPage as string) || 1000;
+    try {
+        // get the total matching elments
+        const totalDocuments = await Transaction.find({ ownerId: id }).estimatedDocumentCount();
+
+        const transactionModel = Transaction.find({ ownerId: id });
+        const transactionCollections = await paginate<ITransaction>(transactionModel, totalDocuments, page, perPage);
+        return res.status(200).json({ transactionCollections });
+    } catch (error) {
+        return res.sendStatus(500);
     }
 }
