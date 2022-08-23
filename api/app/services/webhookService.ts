@@ -23,7 +23,7 @@ export async function processWebhookData({ event, data }: { event: Event; data: 
     if (event === 'mono.events.account_updated') {
         if (data.meta.data_status === 'AVAILABLE') {
             const copy = JSON.parse(JSON.stringify(data.account));
-            await updateAccount(data.account['_id'], data.account);
+            await updateAccount(data.account['_id'], copy);
         }
 
         // get the transactions if account hasNewData
