@@ -49,8 +49,9 @@ async function updateUserAccounts(id: Types.ObjectId, accountId: string, action:
     try {
         const accId = new Types.ObjectId(accountId);
         if (action === 'ADD') {
-            // will be hydrated by the hook event
-            await Account.update({ _id: accId }, { owner: id, getTransc: true }, { upsert: true });
+            // will be or already hydrated by the hook event
+            await Account.update({ _id: accId }, { owner: id, getTransc:false }, { upsert: true });
+            await getUserAccTransactions(id, accountId);
             return true;
         }
         await Account.findByIdAndDelete(accId);
@@ -121,6 +122,19 @@ async function deleteUser(id: string): Promise<boolean> {
 async function requireReAuth(id: string) {
     await Account.update({ _id: Types.ObjectId(id) }, { reAuth: true });
 }
+
+async function getUserAccTransactions(id: Types.ObjectId, accId: string) {
+    const accountIdObject = new Types.ObjectId(accId);
+    const transactions = (await Mono.getTransactions(accId)) as any;
+    for (const transc of transactions['data']) {
+        await Transaction.update(
+            { _id: new Types.ObjectId(transc._id) },
+            { ...transc, accountId: accountIdObject, ownerId: id },
+            { upsert: true },
+        );
+    }
+}
+
 async function refreshTransactions() {
     const accounts = await Account.find();
 
@@ -149,4 +163,5 @@ export {
     removeAccount,
     deleteUser,
     refreshTransactions,
+    getUserAccTransactions,
 };

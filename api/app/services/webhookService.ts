@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import * as Mono from '../services/mono';
 import Account, { IAccount } from '../models/Accounts';
-import Transaction, { ITransaction } from '../models/Transaction';
+import { getUserAccTransactions } from './userService';
 
 type Event =
     | 'mono.events.account_updated'
@@ -30,15 +30,13 @@ export async function processWebhookData({ event, data }: { event: Event; data: 
 
         const accountIdObject = new Types.ObjectId(data.account['_id']);
         const account = await Account.findById(accountIdObject);
+
+        // This means it is a new account we will already get the transactions
+        if (!account?.owner) {
+            return true;
+        }
         if (account?.getTransc) {
-            const transactions = (await Mono.getTransactions(data.account['_id'])) as any;
-            for (const transc of transactions['data']) {
-                await Transaction.update(
-                    { _id: new Types.ObjectId(transc._id) },
-                    { ...transc, accountId: account._id, ownerId: account.owner },
-                    { upsert: true },
-                );
-            }
+            await getUserAccTransactions(account.owner, data.account['_id']);
             await Account.update({ _id: accountIdObject }, { getTransc: false });
         }
         return true;
