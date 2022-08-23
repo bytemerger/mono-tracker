@@ -24,6 +24,10 @@ async function getUser(query: FilterQuery<IUser>): Promise<LeanDocument<IUser> |
 
 async function createNewUser(UserInput: DocumentDefinition<IUser>): Promise<LeanDocument<IUser> | false> {
     try {
+        const exist = await Users.find({ email: UserInput.email });
+        if (exist) {
+            return false;
+        }
         const User = (await Users.create(UserInput)).toJSON();
         return User;
     } catch (error) {

@@ -28,6 +28,9 @@ export async function createUser(req: Request, res: Response, next: NextFunction
     }
     try {
         const User = await UserService.createNewUser(req.body);
+        if (User) {
+            return res.status(400).json({ success: false, message: 'user already exists' });
+        }
         res.status(200).json({ data: User });
     } catch (err) {
         return next(createError(500, { message: err + '... Could not create a new User' }));

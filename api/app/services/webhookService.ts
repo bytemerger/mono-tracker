@@ -11,6 +11,7 @@ type Event =
 
 async function updateAccount(id: string, data: IAccount) {
     const accId = new Types.ObjectId(data['_id']);
+    delete data._id;
     const check = await Account.find({ accountNumber: data.accountNumber });
     if (check.length >= 1) {
         await Account.update({ accountNumber: data.accountNumber }, { ...data, getTransc: true });
@@ -21,6 +22,7 @@ async function updateAccount(id: string, data: IAccount) {
 export async function processWebhookData({ event, data }: { event: Event; data: any }) {
     if (event === 'mono.events.account_updated') {
         if (data.meta.data_status === 'AVAILABLE') {
+            const copy = JSON.parse(JSON.stringify(data.account));
             await updateAccount(data.account['_id'], data.account);
         }
 
