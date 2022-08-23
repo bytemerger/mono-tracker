@@ -1,6 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import { contextProp } from "../store";
 import {
+  API_URL,
   LOCAL_STORAGE_KEY_FOR_TOKEN,
   LOCAL_STORAGE_KEY_FOR_USER,
 } from "./Constants";
@@ -8,7 +9,7 @@ import {
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
 // use ENV
-const BASE_URL = "http://localhost:3001/api/v1";
+const BASE_URL = API_URL;
 
 export default function useRequest(
   { state, dispatch }: contextProp,

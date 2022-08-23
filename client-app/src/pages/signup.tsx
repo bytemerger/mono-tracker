@@ -48,7 +48,7 @@ export default function Signup() {
       });
       return;
     }
-    const { status } = await request("/users", "POST", formState);
+    const { status, data } = await request("/users", "POST", formState);
     if (status === 200) {
       navigate("/login");
       context.dispatch({
@@ -56,6 +56,15 @@ export default function Signup() {
         payload: {
           type: "SUCCESS",
           message: "Successfully Signed up... login in to access your account",
+        },
+      });
+    }
+    if (status === 400) {
+      context.dispatch({
+        type: "setNotification",
+        payload: {
+          type: "ERROR",
+          message: data.message,
         },
       });
     }
