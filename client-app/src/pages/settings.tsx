@@ -6,7 +6,21 @@ import { AppContext } from "../store";
 
 export default function settings() {
   const context = useContext(AppContext);
-  const request = useRequest(context, useNavigate());
+  const navigate = useNavigate();
+  const request = useRequest(context, navigate);
+
+  const deleteAccount = async () => {
+    const { status, data } = await request(`/users/u-id`, "DELETE");
+    if (status === 200) {
+      context.dispatch({ type: "resetState", payload: null });
+      localStorage.clear();
+      context.dispatch({
+        type: "setNotification",
+        payload: { type: "SUCCESS", message: "Deleted Successfully" },
+      });
+      navigate("/login");
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -43,7 +57,10 @@ export default function settings() {
         </div>
         <div className="mt-8">
           <div className="w-64">
-            <div className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl">
+            <div
+              className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl"
+              onClick={deleteAccount}
+            >
               DELETE ACCOUNT
             </div>
           </div>

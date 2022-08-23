@@ -45,7 +45,7 @@ async function updateUserAccounts(id: Types.ObjectId, accountId: string, action:
         const accId = new Types.ObjectId(accountId);
         if (action === 'ADD') {
             // will be hydrated by the hook event
-            await Account.update({ _id: accId }, { owner: id }, { upsert: true });
+            await Account.update({ _id: accId }, { owner: id, getTransc:true }, { upsert: true });
             return true;
         }
         await Account.findByIdAndDelete(accId);

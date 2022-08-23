@@ -30,6 +30,20 @@ export default function dashboard() {
     getAccounts().then((result) => {
       if (result.status === 200) {
         if (result.data.data.totalBalance < 1) {
+          if (
+            Array.isArray(result.data.data.accounts) &&
+            result.data.data.accounts.length > 1
+          ) {
+            dispatch({
+              type: "setNotification",
+              payload: {
+                type: "ERROR",
+                message: "Still processing your account",
+              },
+            });
+            navigate("/accounts");
+            return;
+          }
           dispatch({
             type: "setNotification",
             payload: { type: "ERROR", message: "Please Link an account" },

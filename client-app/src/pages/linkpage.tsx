@@ -28,7 +28,7 @@ export default function linkpage() {
               message: "Account successfully Linked",
             },
           });
-          navigate("/dashboard");
+          navigate("/accounts");
           return;
         }
         context.dispatch({
