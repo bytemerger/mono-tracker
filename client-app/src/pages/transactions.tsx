@@ -55,7 +55,7 @@ export default function accounts() {
             <h3 className="text-lg font-medium">🤩 Results.... 🥵</h3>
             <div>
               <select value={currentAccount} onChange={getNewTransactions}>
-                <option selected>Choose one</option>
+                <option selected disabled={currentAccount !== ''}>Choose one</option>
                 {options.map((value) => (
                   <option value={value.value}>{value.label}</option>
                 ))}
