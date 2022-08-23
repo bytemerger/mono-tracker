@@ -12,9 +12,9 @@ type Event =
 async function updateAccount(id: string, data: IAccount) {
     const accId = new Types.ObjectId(data['_id']);
     delete data._id;
-    const check = await Account.find({ accountNumber: data.accountNumber });
+    const check = await Account.find({ _id: accId, accountNumber: data.accountNumber });
     if (check.length >= 1) {
-        await Account.update({ accountNumber: data.accountNumber }, { ...data, getTransc: true });
+        await Account.update({  _id: accId, accountNumber: data.accountNumber }, { ...data, getTransc: true });
         return true;
     }
     await Account.update({ _id: accId }, { ...data, getTransc: true }, { upsert: true });
