@@ -38,7 +38,7 @@ export default function Signup() {
   );
   const submitSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formState.email || !formState.password) {
+    if (!formState.email || !formState.password || !formState.firstName || !formState.lastName) {
       context.dispatch({
         type: "setNotification",
         payload: {

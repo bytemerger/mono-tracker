@@ -1,6 +1,7 @@
 import { DocumentDefinition, FilterQuery, LeanDocument, Types } from 'mongoose';
 import Users, { IUser } from '../models/Users';
 import Account, { IAccount } from '../models/Accounts';
+import Transaction, { ITransaction } from '../models/Transaction';
 import createError, { UnknownError } from 'http-errors';
 import * as Mono from './mono';
 import MonoError from './mono/MonoError';
@@ -45,7 +46,7 @@ async function updateUserAccounts(id: Types.ObjectId, accountId: string, action:
         const accId = new Types.ObjectId(accountId);
         if (action === 'ADD') {
             // will be hydrated by the hook event
-            await Account.update({ _id: accId }, { owner: id, getTransc:true }, { upsert: true });
+            await Account.update({ _id: accId }, { owner: id, getTransc: true }, { upsert: true });
             return true;
         }
         await Account.findByIdAndDelete(accId);
@@ -95,6 +96,10 @@ async function removeAccount(id: Types.ObjectId, UserInput: { accountId: string 
 }
 async function deleteUser(id: string): Promise<boolean> {
     const ID = new Types.ObjectId(id);
+
+    // delete all linked transaction
+    await Transaction.deleteMany({ ownerId: id });
+
     // delete all the accounts linked to the user
     const userMonoAccounts = await Account.find({ owner: id });
 

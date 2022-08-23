@@ -32,12 +32,12 @@ export default function dashboard() {
         if (result.data.data.totalBalance < 1) {
           if (
             Array.isArray(result.data.data.accounts) &&
-            result.data.data.accounts.length > 1
+            result.data.data.accounts.length > 0
           ) {
             dispatch({
               type: "setNotification",
               payload: {
-                type: "ERROR",
+                type: "SUCCESS",
                 message: "Still processing your account",
               },
             });

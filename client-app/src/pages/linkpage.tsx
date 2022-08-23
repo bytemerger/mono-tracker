@@ -8,7 +8,6 @@ import { AppContext } from "../store";
 
 export default function linkpage() {
   const context = useContext(AppContext);
-  console.log(context.state.user);
   const navigate = useNavigate();
   const request = useRequest(context, navigate);
   const link = () => {

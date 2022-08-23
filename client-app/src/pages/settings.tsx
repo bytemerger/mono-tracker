@@ -10,15 +10,17 @@ export default function settings() {
   const request = useRequest(context, navigate);
 
   const deleteAccount = async () => {
-    const { status, data } = await request(`/users/u-id`, "DELETE");
-    if (status === 200) {
-      context.dispatch({ type: "resetState", payload: null });
-      localStorage.clear();
-      context.dispatch({
-        type: "setNotification",
-        payload: { type: "SUCCESS", message: "Deleted Successfully" },
-      });
-      navigate("/login");
+    if (window.confirm("Are you sure you want to delete your account")) {
+      const { status, data } = await request(`/users/u-id`, "DELETE");
+      if (status === 200) {
+        context.dispatch({ type: "resetState", payload: null });
+        localStorage.clear();
+        context.dispatch({
+          type: "setNotification",
+          payload: { type: "SUCCESS", message: "Deleted Successfully" },
+        });
+        navigate("/login");
+      }
     }
   };
 
@@ -58,7 +60,7 @@ export default function settings() {
         <div className="mt-8">
           <div className="w-64">
             <div
-              className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl"
+              className="text-lg tracking-[2.17px] font-bold text-[#F22828] p-6 bg-[#FFF4F4] mt-14 text-center rounded-xl cursor-pointer"
               onClick={deleteAccount}
             >
               DELETE ACCOUNT
