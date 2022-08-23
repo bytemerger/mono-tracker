@@ -5,9 +5,9 @@
 ## Overview
 
 The application is a mono repo of three essentail parts
-> Backend Server - This is the api that communicates with mono
-> Cron Job - To update application general application state - transactions etc...
-> client app - Customer facing application to atualize the objectives
+- Backend Server - This is the api that communicates with mono
+- Cron Job - To update application general application state - transactions etc...
+- client app - Customer facing application to atualize the objectives
 
 ## Installation
 
